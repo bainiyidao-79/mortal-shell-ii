@@ -191,6 +191,21 @@ export const siteConfig: SiteConfig = {
     buttonHref: "/guide/mortal-shell-ii-weapons",
   },
 
+  ads: {
+    sidebar: `<script async="async" data-cfasync="false" src="https://pl31112824.profitableratecpmnetwork.com/6f053d4916243be5a0f56b317d28172b/invoke.js"></script>
+<div id="container-6f053d4916243be5a0f56b317d28172b"></div>`,
+    footerBanner: `<script>
+ atOptions = {
+ 'key' : '61f275d4fbf01cb213fc9c01052b5cd8',
+ 'format' : 'iframe',
+ 'height' : 90,
+ 'width' : 728,
+ 'params' : {}
+ };
+</script>
+<script src="https://www.highrevenueformat.com/61f275d4fbf01cb213fc9c01052b5cd8/invoke.js"></script>`,
+  },
+
   faq: [
     {
       question: "Do I need to play the first Mortal Shell?",
