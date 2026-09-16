@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>topic-carousel-wiki · preview</title>
+<style>
+  /* 预览用静态复刻（不依赖构建）：色值对应 src/app/globals.css 的 @theme token */
+  :root{
+    --primary:#ff3c02; --accent:#ff6a00; --auxiliary:#c1b597;
+    --background:#150f10; --foreground:#efeeea; --card:#1c1515; --muted:#262527;
+    --muted-foreground:#a6a195; --border:#402926; --glass:#131313cc; --panel:#000000e0;
+    --line-accent:#ff3c025c; --more:#ff8a6a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--background);color:var(--foreground);font:14px/1.6 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1232px;margin:0 auto;padding:0 16px}
+  .demo-tag{max-width:1232px;margin:0 auto;padding:10px 16px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);border-bottom:1px solid var(--border)}
+  /* Hero 大图直顶（无顶栏） */
+  .hero{position:relative;height:440px;background:linear-gradient(120deg,#101014 0%,#101014 40%,#3a1708 100%);background-size:cover;background-position:top center;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.45),rgba(0,0,0,0) 45%,var(--background))}
+  .hero .inner{position:absolute;left:0;right:0;bottom:0;z-index:2}
+  .hero .inner>div{max-width:1232px;margin:0 auto;padding:0 16px 18px}
+  .eyebrow{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:#ff9a7a;margin-bottom:4px}
+  h1{font-size:44px;line-height:1.1;letter-spacing:-.01em}
+  .sub{color:var(--muted-foreground);margin-top:8px}
+  /* 栅格：轮播 790 + 间隙 15 + 信息卡 395 = 1200 */
+  .main1{display:flex;gap:15px;padding-top:20px}
+  .main3{display:flex;gap:25px;margin-top:25px;align-items:stretch}
+  /* 轮播 */
+  .carousel{position:relative;width:790px;height:292px;flex:none;overflow:hidden;background:var(--card)}
+  .carousel .slideimg{position:absolute;inset:0;background:linear-gradient(120deg,#101014,#2a1208 70%,#ff3c02 160%)}
+  .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.59),rgba(0,0,0,.35) 45%,rgba(0,0,0,0))}
+  .carousel .ctitle{position:absolute;left:30px;bottom:20px;width:730px;font-size:18px;font-weight:700;color:#fff}
+  .dots{position:absolute;right:16px;bottom:16px;display:flex;gap:8px}
+  .dot{width:8px;height:8px;background:rgba(255,255,255,.6)}
+  .dot.on{width:14px;background:#fff}
+  /* 信息卡 */
+  .infocard{width:395px;height:292px;flex:none;padding:16px;background:var(--glass);backdrop-filter:blur(4px)}
+  .infocard h2{text-align:center;font-size:24px;font-weight:700}
+  .title-rule{width:270px;height:6px;margin:8px auto 0;background:linear-gradient(to right,transparent,var(--line-accent),transparent)}
+  .cardbody{display:flex;gap:12px;margin-top:12px}
+  .cover{width:125px;height:166px;flex:none;background:linear-gradient(150deg,#241a18,#101014);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted-foreground)}
+  .fields{flex:1;min-width:0}
+  .fields div{display:flex;gap:8px;font-size:12px;line-height:20px}
+  .fields b{width:64px;flex:none;color:var(--muted-foreground);font-weight:400}
+  .btn-primary{display:inline-flex;align-items:center;justify-content:center;height:32px;width:96px;font-size:13px;font-weight:600;color:#fff;background:var(--primary)}
+  .cardcta{margin-top:12px;display:flex;justify-content:center}
+  /* 视频列 350 */
+  .videos{width:350px;flex:none;display:flex;flex-direction:column;gap:25px}
+  .vcard{position:relative;flex:1;min-height:195px;border-radius:8px;background:#000;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted-foreground);font-size:12px}
+  /* 攻略区 820 */
+  .guide{flex:1;min-width:0;min-height:920px;background:var(--panel);padding:16px}
+  .sec-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700}
+  .sec-title i{width:10px;height:10px;background:var(--primary);display:inline-block}
+  .btns{display:flex;flex-wrap:wrap;gap:15px;margin-top:15px}
+  .btn-sq{display:flex;align-items:center;justify-content:center;width:179px;height:28px;padding:0 8px;font-size:14px;background:var(--muted);border:1px solid transparent;transition:border-color .3s;overflow:hidden;white-space:nowrap}
+  .btn-sq:hover{border-color:#fff}
+  .divider{height:1px;border:0;background:var(--line-accent);margin:10px 0}
+  .more{display:block;text-align:center;font-size:12px;color:var(--more);margin:12px 0 0}
+  .group{margin-bottom:15px}
+  /* 内容页 */
+  .crumb{font-size:12px;color:var(--muted-foreground);padding:24px 0 0}
+  .crumb b{color:var(--foreground);font-weight:400}
+  .l3{display:flex;gap:24px;align-items:flex-start;margin-top:20px;padding-bottom:48px}
+  .article{flex:1;min-width:0;background:var(--panel);padding:24px}
+  .article h2{font-size:26px}
+  .meta{font-size:12px;color:var(--muted-foreground);margin-top:12px;display:flex;gap:16px}
+  .lead{margin-top:12px;padding-left:12px;border-left:2px solid var(--primary);color:var(--muted-foreground);font-size:13.5px}
+  .prose{margin-top:22px;font-size:15px;line-height:1.85}
+  .prose h3{font-size:20px;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line-accent)}
+  .prose p{margin:14px 0}
+  .prose ul{margin:14px 0;padding-left:22px}
+  .art-ph{float:right;width:300px;margin:6px 0 14px 20px}
+  .art-ph .ph{height:170px;background:linear-gradient(150deg,#241a18,#101014);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted-foreground)}
+  .art-ph figcaption{margin-top:6px;font-size:11px;color:var(--muted-foreground)}
+  .rail{width:320px;flex:none;position:sticky;top:16px;background:var(--glass);backdrop-filter:blur(4px);overflow:hidden}
+  .rail .banner{height:130px;background:linear-gradient(120deg,#101014,#3a1708)}
+  .railtree{padding:12px}
+  .railgrp{margin-bottom:16px}
+  .railgrp>.gt{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;padding-bottom:4px;border-bottom:1px solid var(--border)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .grid2 .btn-sq{width:100%;font-size:12px}
+  footer{border-top:1px solid var(--border);color:var(--muted-foreground);font-size:13px}
+  footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-top:32px;padding-bottom:32px}
+  @media(max-width:1260px){
+    .main1,.main3,.l3{flex-direction:column}
+    .carousel,.infocard,.videos,.rail{width:100%}
+    .guide,.rail{min-height:auto}
+    .rail{position:static}
+    .btn-sq{width:100%}
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-tag">topic-carousel-wiki · static preview (no build required)</div>
+
+<!-- ============ 首页 ============ -->
+<section class="hero">
+  <div class="inner"><div>
+    <p class="eyebrow">Wiki Guide</p>
+    <h1>Sample Game</h1>
+    <p class="sub">Walkthrough · Collectibles · Game Info</p>
+  </div></div>
+</section>
+
+<div class="wrap">
+  <div class="main1">
+    <!-- 横向轮播 790×292（3 篇 / 5s 自动 / 悬停暂停 / 分页点切换） -->
+    <div class="carousel">
+      <div class="slideimg"></div>
+      <div class="scrim"></div>
+      <div class="ctitle">Sample Game — Official Trailer Breakdown</div>
+      <div class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div>
+    </div>
+
+    <!-- 游戏信息卡 395×292 -->
+    <aside class="infocard">
+      <h2>Sample Game</h2>
+      <div class="title-rule"></div>
+      <div class="cardbody">
+        <div class="cover">COVER<br>125×166</div>
+        <div class="fields">
+          <div><b>Developer</b><span>Placeholder Studio</span></div>
+          <div><b>Publisher</b><span>Placeholder Publishing</span></div>
+          <div><b>Release Date</b><span>TBA</span></div>
+          <div><b>Platforms</b><span>PC, PlayStation, Xbox</span></div>
+          <div><b>Genre</b><span>Action RPG</span></div>
+        </div>
+      </div>
+      <div class="cardcta"><a class="btn-primary" href="#">View on Steam ↗</a></div>
+    </aside>
+  </div>
+
+  <div class="main3">
+    <!-- 视频列 350（2–4 个 YouTube 嵌入，高度与右攻略区对齐） -->
+    <div class="videos">
+      <div class="vcard"><span>▶ Official Trailer</span><span>YouTube · 16:9</span></div>
+      <div class="vcard"><span>▶ Beginner Walkthrough</span><span>YouTube · 16:9</span></div>
+    </div>
+
+    <!-- 攻略区 ~820×920：栏目标题 + 小方按钮网格 + 橙色分隔线 + More 展开 -->
+    <div class="guide">
+      <div class="group">
+        <div class="sec-title"><i></i>Guides</div>
+        <div class="btns">
+          <a class="btn-sq" href="#">Overview</a>
+          <a class="btn-sq" href="#">Beginner Walkthrough</a>
+          <a class="btn-sq" href="#">Chapter 1 Collectibles</a>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="group">
+        <div class="sec-title"><i></i>Game Info</div>
+        <div class="btns">
+          <a class="btn-sq" href="#">Release Info</a>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="group">
+        <div class="sec-title"><i></i>Bosses</div>
+        <div class="btns">
+          <a class="btn-sq" href="#">Boss List</a>
+          <a class="btn-sq" href="#">Boss 1</a>
+          <a class="btn-sq" href="#">Boss 2</a>
+          <a class="btn-sq" href="#">Boss 3</a>
+          <a class="btn-sq" href="#">Boss 4</a>
+        </div>
+        <a class="more" href="#">More ▼</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 内容页 L3 ============ -->
+<div class="wrap">
+  <div class="crumb">Home › <a href="#">Guides</a> › <b>Beginner Walkthrough</b></div>
+</div>
+
+<div class="wrap">
+  <div class="l3">
+    <article class="article">
+      <h2>Beginner Walkthrough</h2>
+      <div class="meta"><span>Published 2026-01-12</span><span>6 min read</span></div>
+      <p class="lead">A short opening walkthrough that shows how article pages mix text and images.</p>
+      <div class="prose">
+        <div class="art-ph"><div class="ph">ILLUSTRATION</div><figcaption>Floating image, text wraps around it.</figcaption></div>
+        <h3>Step by step</h3>
+        <p>This is a placeholder paragraph shipped with the skeleton. Replace it with researched guide content for the game you are building.</p>
+        <ul><li>Read the controls screen before the first fight.</li><li>Loot everything in the starting area.</li><li>Spend your first upgrade on movement.</li></ul>
+        <h3>Field notes</h3>
+        <p>Paragraphs beside a floating image stay short — two or three sentences. The wide line height keeps long walkthroughs readable.</p>
+      </div>
+    </article>
+
+    <!-- 右黏性栏：keyart banner + 分组可折叠导航树（组内两列按钮 + More） -->
+    <aside class="rail">
+      <div class="banner"></div>
+      <div class="railtree">
+        <div class="railgrp">
+          <div class="gt"><span>Guides</span><span>⌃</span></div>
+          <div class="grid2">
+            <a class="btn-sq" href="#">Overview</a>
+            <a class="btn-sq" href="#">Walkthrough</a>
+            <a class="btn-sq" href="#">Collectibles</a>
+            <a class="btn-sq" href="#">Bosses</a>
+          </div>
+          <a class="more" href="#">More ▼</a>
+        </div>
+        <div class="railgrp">
+          <div class="gt"><span>Game Info</span><span>⌄</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer><div class="wrap">
+  <span>Sample Game — Fan-made wiki. Not affiliated with the game developer or publisher.</span>
+  <span>Contact: [pending] · Official Site ↗</span>
+</div></footer>
+
+</body>
+</html>
