@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/config/site";
+import { siteConfig, siteUrl } from "@/config/site";
 import { Analytics } from "@/components/Analytics";
 import { Footer } from "@/components/Footer";
 import { SideRailAds } from "@/components/SideRailAds";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: siteConfig.seo.title,
   description: siteConfig.seo.description,
   keywords: siteConfig.seo.keywords,
